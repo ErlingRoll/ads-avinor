@@ -39,3 +39,22 @@ class DataManager:
     def _create_data_file_name(self, number: Union[str, int]) -> str:
         filename = 'dbo_' + str(number).zfill(5) + '.V_NTNU_Export.csv'
         return filename
+
+    def get_unique_values(self, column_name: str):
+        # variable to hold the count
+        cnt = 0
+
+        # list to hold visited values
+        visited = []
+
+        # loop for counting the unique
+        # values in height
+        for i in range(0, len(self.bag_messages[column_name])):
+
+            if self.bag_messages[column_name][i] not in visited:
+
+                visited.append(self.bag_messages[column_name]['height'][i])
+
+                cnt += 1
+
+        return cnt, visited
