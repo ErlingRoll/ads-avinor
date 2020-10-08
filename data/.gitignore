@@ -1,4 +1,5 @@
 # Ignore all data files
 *.csv
+DimFlyplass.csv
 
 !DimFlyplassProccesed.csv
