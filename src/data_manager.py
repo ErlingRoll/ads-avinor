@@ -1,3 +1,5 @@
+from typing import Union
+
 import pandas as pd
 
 
@@ -34,6 +36,6 @@ class DataManager:
             print('Failed to read datafile:', data_path)
             return None
 
-    def _create_data_file_name(self, number):
+    def _create_data_file_name(self, number: Union[str, int]) -> str:
         filename = 'dbo_' + str(number).zfill(5) + '.V_NTNU_Export.csv'
         return filename
