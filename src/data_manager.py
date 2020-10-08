@@ -13,13 +13,13 @@ class DataManager:
 
     def read_all_data_files(self):
 
-        self._read_file(self.create_data_file_name('0'))
+        self._read_file(self._create_data_file_name('0'))
 
         for x in range(1, self.amount_files, 1):
-            self._read_file(self.create_data_file_name(str(x)))
+            self._read_file(self._create_data_file_name(str(x)))
 
     def read_data_files(self, file_number):
-        self._read_file(self, self.create_data_file_name(file_number))
+        self._read_file(self._create_data_file_name(file_number))
 
     def _read_file(self, filename: str) -> None:
         data_path = self.data_folder + filename
@@ -34,6 +34,6 @@ class DataManager:
             print('Failed to read datafile:', data_path)
             return None
 
-    def create_data_file_name(self, number):
-        filename = 'dbo_' + number.zfill(5) + '.V_NTNU_Export.csv'
+    def _create_data_file_name(self, number):
+        filename = 'dbo_' + str(number).zfill(5) + '.V_NTNU_Export.csv'
         return filename
