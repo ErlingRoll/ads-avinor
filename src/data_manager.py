@@ -10,9 +10,6 @@ class DataManager:
         self.data_folder = data_folder
         self.amount_files = amount_files
 
-    def get_missing_bags(self):
-        pass
-
     def read_all_data_files(self):
 
         self._read_file(self._create_data_file_name('0'))
