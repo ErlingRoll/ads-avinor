@@ -6,7 +6,7 @@ from data_manager import DataManager
 class AirportModel:
 
     def __init__(self, dm: DataManager):
-        dm.airportModel = self
+        dm.airport_model = self
         self.dm = dm
         self.airports = self.get_airports()[1]
 

@@ -4,6 +4,8 @@ from data_manager import DataManager
 
 from analysis_models.airport_model import AirportModel
 
+from analysis_models.bag_model import BagModel
+
 if __name__ == '__main__':
 
     data_folder = '../data/'
@@ -22,4 +24,6 @@ if __name__ == '__main__':
     # print(dm.bag_messages)
 
     airport_model = AirportModel(dm)
-    print(airport_model.airports)
+    bag_model = BagModel(dm)
+
+    print(bag_model.dm.airport_model.airports)
