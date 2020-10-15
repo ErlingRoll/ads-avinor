@@ -46,7 +46,6 @@ class DataManager:
         visited = []
 
         # loop for counting the unique
-        # values in height
         for i in range(0, len(self.bag_messages[column_name])):
 
             if self.bag_messages[column_name][i] not in visited:
