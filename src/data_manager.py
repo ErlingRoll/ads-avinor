@@ -5,10 +5,11 @@ import pandas as pd
 
 class DataManager:
 
-    def __init__(self, data_folder, amount_files):
+    def __init__(self, data_folder, amount_files, airport_metadata_filename):
         self.bag_messages = None
         self.data_folder = data_folder
         self.amount_files = amount_files
+        self.airport_metadata_filename = airport_metadata_filename
 
     def read_all_data_files(self):
 
@@ -50,7 +51,7 @@ class DataManager:
 
             if self.bag_messages[column_name][i] not in visited:
 
-                visited.append(self.bag_messages[column_name]['height'][i])
+                visited.append(self.bag_messages[column_name][i])
 
                 cnt += 1
 

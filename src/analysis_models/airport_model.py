@@ -1,4 +1,4 @@
-from src.data_manager import DataManager
+from data_manager import DataManager
 
 
 class AirportModel:
@@ -8,4 +8,5 @@ class AirportModel:
 
     def get_airports(self) -> list:
         # Get list of unique airport names
-        pass
+        # print(self.dm.bag_messages)
+        self.dm.get_unique_values('IATACode')
