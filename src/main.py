@@ -15,11 +15,11 @@ if __name__ == '__main__':
 
     # Import single file
     dm.read_data_files(data_file_1)
-    # print(dm.bag_messages)
+    # print(dm.airport_metadata)
 
     # Import all files
     # dm.read_all_data_files()
     # print(dm.bag_messages)
 
     airport_model = AirportModel(dm)
-    print(airport_model.get_airports())
+    print(airport_model.airports)
