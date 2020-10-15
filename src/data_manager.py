@@ -5,7 +5,7 @@ import pandas as pd
 
 class DataManager:
 
-    def __init__(self, data_folder, amount_files, airport_metadata_filename):
+    def __init__(self, data_folder="../../data/", amount_files=61, airport_metadata_filename):
         self.bag_messages = None
         self.data_folder = data_folder
         self.amount_files = amount_files
@@ -18,13 +18,13 @@ class DataManager:
         for x in range(1, self.amount_files, 1):
             self._read_file(self._create_data_file_name(str(x)))
 
-    def read_data_files(self, file_number):
+    def read_data_files(self, file_number=0):
         self._read_file(self._create_data_file_name(file_number))
 
     def _read_file(self, filename: str) -> None:
         data_path = self.data_folder + filename
         try:
-            print('Reading data from', filename)
+            print('Reading data from', data_path)
             df = pd.read_csv(data_path, error_bad_lines=False, index_col=False, dtype='unicode')
             if self.bag_messages is not None:
                 self.bag_messages += df
