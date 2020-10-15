@@ -24,7 +24,7 @@ class DataManager:
         data_path = self.data_folder + filename
         try:
             print('Reading data from', data_path)
-            df = pd.read_csv(data_path, error_bad_lines=False, index_col=False, dtype='unicode')
+            df = pd.read_csv(data_path, error_bad_lines=False, index_col=False, dtype=str, parse=False)
             if self.bag_messages is not None:
                 self.bag_messages += df
             else:
