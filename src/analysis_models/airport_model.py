@@ -10,7 +10,7 @@ class AirportModel:
         self.dm = dm
         self.airports = self.get_airports()[1]
 
-    def get_airports(self) -> Tuple[int, list]:
+    def get_airports(self) -> list:
         # Get list of unique airport names
         column_name = 'AirportCode'
 
@@ -29,4 +29,4 @@ class AirportModel:
 
                 cnt += 1
 
-        return cnt, visited
+        return visited
