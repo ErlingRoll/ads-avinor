@@ -11,8 +11,8 @@ if __name__ == '__main__':
 
     dm = DataManager(data_folder, amount_files, airport_metadata_filename)
 
-    # Import single file
-    dm.read_data_files(data_file_1)
+    # Import data
+    dm.read_multiple_data_files([0])
 
     airport_model = AirportModel(dm)
     bag_model = BagModel(dm)
