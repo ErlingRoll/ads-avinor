@@ -5,10 +5,11 @@ import pandas as pd
 
 class DataManager:
 
-    def __init__(self, data_folder='../../data/', amount_files=62,
+    def __init__(self, data_folder='../data/', output_folder='../output/', amount_files=62,
                  airport_metadata_filename='DimFlyplassProccesed.csv'):
         self.bag_messages = None
         self.data_folder = data_folder
+        self.output_folder = output_folder
         self.amount_files = amount_files
         self.airport_metadata_filename = airport_metadata_filename
         self.airport_metadata = self._read_file(self.data_folder + airport_metadata_filename)
