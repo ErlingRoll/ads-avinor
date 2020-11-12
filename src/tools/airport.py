@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib as plt
 import glob
 
-path = "../data/DimFlyplass.csv"
+path = "../../data/DimFlyplass.csv"
 df = pd.read_csv(path, skiprows=1, index_col=None, header=None, low_memory=False)
 df.columns = 'DimKey,DimAlternateKey,BatchId,DateFrom,DateTo,Description,IATACode,' \
              'LVOwned,WorldRegionCode,WorldRegionDescription,CountryCode,Country,' \

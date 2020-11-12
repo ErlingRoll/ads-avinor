@@ -1,36 +1,123 @@
-from src.data_manager import DataManager
-import pandas as pd
+from datetime import datetime as dt
+from data_manager import DataManager
 
 
 class BagModel:
 
-    def __init__(self, dm: DataManager = DataManager()):
+    def __init__(self, dm: DataManager):
         self.dm = dm
 
-    def get_missing_bags(self):
-        df = pd.read_csv("../../data/dbo_00000.V_NTNU_Export.csv", index_col=None, low_memory=False, header=0)
+    def get_routes(self, summer=True, international_only=False, airline_code=None):
 
-        df_filter = df[(df["bagTagNumber"] == 81757582)]
-        with pd.option_context('display.max_rows', 20, 'display.max_columns', None):  # more options can be specified also
-            print(df_filter)
+        # Hard coded summer and autumn periods
+        summer_period = {'start_date': '2020-07-1', 'end_date': '2020-08-15'}
+        autumn_period = {'start_date': '2020-08-16', 'end_date': '2020-09-15'}
 
-        pass
+        # Set period for valid routes
+        if summer:
+            start_date = dt.strptime(summer_period['start_date'], '%Y-%m-%d')
+            end_date = dt.strptime(summer_period['end_date'], '%Y-%m-%d')
+        else:
+            start_date = dt.strptime(autumn_period['start_date'], '%Y-%m-%d')
+            end_date = dt.strptime(autumn_period['end_date'], '%Y-%m-%d')
 
+        # Get all airports in Norway
+        norwegian_airports = self.dm.airport_model.get_airports()
 
-"""
-sourceOrganization,sourceSystem,sourceTimestamp,bagTagNumber,bagEventCode,bagEventTimestamp,bagEventAirportIATA,
-bagEventLocation,bagEventDescription,bagEventErrorCode,bagFinalAirportIATA,LegArrayLength,
-Leg0_departureAirportIATA,Leg0_arrivalAirportIATA,Leg0_operatingAirlineIATA,Leg0_flightId,Leg0_sobt,
-Leg1_departureAirportIATA,Leg1_arrivalAirportIATA,Leg1_operatingAirlineIATA,Leg1_flightId,Leg1_sobt,
-Leg2_departureAirportIATA,Leg2_arrivalAirportIATA,Leg2_operatingAirlineIATA,Leg2_flightId,Leg2_sobt,
-Leg3_departureAirportIATA,Leg3_arrivalAirportIATA,Leg3_operatingAirlineIATA,Leg3_flightId,Leg3_sobt,
-Leg4_departureAirportIATA,Leg4_arrivalAirportIATA,Leg4_operatingAirlineIATA,Leg4_flightId,Leg4_sobt,
-Leg5_departureAirportIATA,Leg5_arrivalAirportIATA,Leg5_operatingAirlineIATA,Leg5_flightId,Leg5_sobt,
-Leg6_departureAirportIATA,Leg6_arrivalAirportIATA,Leg6_operatingAirlineIATA,Leg6_flightId,Leg6_sobt,
-Leg7_departureAirportIATA,Leg7_arrivalAirportIATA,Leg7_operatingAirlineIATA,Leg7_flightId,Leg7_sobt,
-bagpnrcode
-"""
+        # Get all bag messages loaded in memory
+        bag_messages = self.dm.bag_messages
 
+        # Specify progress printing threshold
+        loading_interval = int(round(len(bag_messages) / 100))
 
-hello = BagModel()
-hello.get_missing_bags()
+        # Variables to hold accumulated data
+        unique_bags = {}
+        unique_routes = {}
+
+        for index, row in bag_messages.iterrows():
+
+            # Get bag number
+            bag_number = row['bagTagNumber']
+
+            # For showing loading progress
+            if index % loading_interval == 0:
+                print('Getting routes:', (index * 100 / len(bag_messages) + 1), end='%\r')
+
+            airport_legs = int(row['LegArrayLength'])
+
+            if airport_legs <= 0:
+                continue
+
+            departure_airport = row['bagEventAirportIATA']
+            final_destination = row['bagFinalAirportIATA']
+            timestamp = dt.strptime(row['sourceTimestamp'][:10], '%Y-%m-%d')
+            second_last_airport = row[f'Leg{str(airport_legs - 1)}_departureAirportIATA']
+            action_code = row['bagEventCode']
+
+            try:
+                if not (start_date < timestamp < end_date) \
+                        or action_code != 'BagTagGenerated' \
+                        or departure_airport == final_destination \
+                        or departure_airport != second_last_airport:
+                    continue
+
+                if final_destination in norwegian_airports:
+                    # Must be domestic
+                    if international_only:
+                        continue
+                else:
+                    # Must be international
+                    if not international_only:
+                        continue
+            except Exception as e:
+                print(bag_number, e)
+
+            unique_bags[bag_number] = row
+
+        # Process all legs of each baggage
+        for bag_number, bag in unique_bags.items():
+            for leg_number in range(int(bag['LegArrayLength'])):
+                departure_airport = bag[f'Leg{str(leg_number)}_departureAirportIATA']
+                arrival_airport = bag[f'Leg{str(leg_number)}_arrivalAirportIATA']
+                _airline_code = bag[f'Leg{str(leg_number)}_operatingAirlineIATA']
+
+                # Skip if airline code does not match the one specified if it is specified
+                if airline_code:
+                    if airline_code != _airline_code:
+                        continue
+
+                route_key = str(departure_airport) + '-' + str(arrival_airport)
+                route_row = unique_routes.get(route_key)
+                if route_row:
+                    unique_routes[route_key].append(bag)
+                else:
+                    unique_routes[route_key] = [bag]
+
+        unique_routes_sorted = dict(sorted(unique_routes.items(), key=lambda x: len(x[1]), reverse=True))
+
+        file_filters = ''
+        if summer:
+            file_filters += '_summer'
+        else:
+            file_filters += '_autumn'
+        if airline_code:
+            file_filters += f'_{airline_code}'
+        if international_only:
+            file_filters += '_international_only'
+        else:
+            file_filters += '_domestic_only'
+
+        output_file = f'{self.dm.output_folder}routes{file_filters}.csv'
+
+        total_bag_legs = 0
+
+        with open(output_file, 'w') as file:
+            file.write('airport,bag_amount\n')
+            for k, v in unique_routes_sorted.items():
+                file.write(k + ',' + str(len(v)) + '\n')
+                total_bag_legs += len(v)
+
+        print('\nAmount of unique bags:', len(unique_bags))
+        print('Amount of unique routes:', len(unique_routes))
+        print('Total bag legs flown:', total_bag_legs)
+        print('Wrote results to file:', output_file)
