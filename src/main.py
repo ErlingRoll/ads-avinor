@@ -20,13 +20,13 @@ if __name__ == '__main__':
     bag_model = BagModel(dm)
 
     # Run model
-    airline_code = 'DY'
+    airline_code = 'DY'  # Norwegian
 
     # Summer
-    # bag_model.get_routes(summer=True, international_only=False, airline_code=airline_code)
-    # bag_model.get_routes(summer=True, international_only=False, airline_code=None)
-    # bag_model.get_routes(summer=True, international_only=True, airline_code=airline_code)
-    # bag_model.get_routes(summer=True, international_only=True, airline_code=None)
+    bag_model.get_routes(summer=True, international_only=False, airline_code=airline_code)
+    bag_model.get_routes(summer=True, international_only=False, airline_code=None)
+    bag_model.get_routes(summer=True, international_only=True, airline_code=airline_code)
+    bag_model.get_routes(summer=True, international_only=True, airline_code=None)
 
     # Autumn
     bag_model.get_routes(summer=False, international_only=False, airline_code=airline_code)
