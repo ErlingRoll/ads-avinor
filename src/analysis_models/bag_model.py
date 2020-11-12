@@ -61,7 +61,7 @@ class BagModel:
                         or departure_airport != second_last_airport:
                     continue
 
-                if final_destination in norwegian_airports:
+                if all([final_destination in norwegian_airports for i in [departure_airport, final_destination]]):
                     # Must be domestic
                     if international_only:
                         continue

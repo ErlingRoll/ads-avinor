@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def show_graph(percent=True, sort_by_change=False, international_only=False, airline_code=None, amount_shown=None):
+def show_graph(percent=True, sort_by_change=False, international_only=False, airline_code=None, amount_shown=None, reverse=False):
 
     file_filters = ''
     if percent:
@@ -22,6 +22,9 @@ def show_graph(percent=True, sort_by_change=False, international_only=False, air
     data_flat = flat_changes.readlines()
     data_flat.pop(0)
     amount_routes = len(data_flat)
+
+    if reverse:
+        data_flat.reverse()
 
     if amount_shown:
         if amount_shown > amount_routes:
@@ -54,7 +57,7 @@ def show_graph(percent=True, sort_by_change=False, international_only=False, air
     index = np.arange(amount_shown)
 
     bar_width = 0.3
-    opacity = 0.9
+    opacity = 1
     plt.bar(index, bar1, bar_width, alpha=opacity, color='#F85E00', label='Summer')
     if not percent:
         plt.bar(index + bar_width, bar2, bar_width, alpha=opacity, color='#5F4BB6', label='Autumn')
@@ -71,4 +74,4 @@ def show_graph(percent=True, sort_by_change=False, international_only=False, air
 if __name__ == '__main__':
 
     airline_code = 'DY'
-    show_graph(percent=False, sort_by_change=False, international_only=False, airline_code=airline_code, amount_shown=None)
+    show_graph(percent=False, sort_by_change=False, international_only=False, airline_code=None, amount_shown=100, reverse=False)
