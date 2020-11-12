@@ -24,9 +24,9 @@ if __name__ == '__main__':
 
     # Summer
     bag_model.get_routes(summer=True, international_only=False, airline_code=airline_code)
-    # bag_model.get_routes(summer=True, international_only=False, airline_code=None)
+    bag_model.get_routes(summer=True, international_only=False, airline_code=None)
     bag_model.get_routes(summer=True, international_only=True, airline_code=airline_code)
-    # bag_model.get_routes(summer=True, international_only=True, airline_code=None)
+    bag_model.get_routes(summer=True, international_only=True, airline_code=None)
 
     # Autumn
     # bag_model.get_routes(summer=False, international_only=False, airline_code=airline_code)

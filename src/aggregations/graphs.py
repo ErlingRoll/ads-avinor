@@ -74,4 +74,4 @@ def show_graph(percent=True, sort_by_change=False, international_only=False, air
 if __name__ == '__main__':
 
     airline_code = 'DY'
-    show_graph(percent=False, sort_by_change=False, international_only=False, airline_code=None, amount_shown=100, reverse=False)
+    show_graph(percent=False, sort_by_change=False, international_only=False, airline_code=airline_code, amount_shown=100, reverse=False)
