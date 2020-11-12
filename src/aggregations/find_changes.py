@@ -92,7 +92,7 @@ def find_changes(international_only=False, airline_code=None, minimum_threshold=
 if __name__ == '__main__':
 
     airline_code = 'DY'
-    find_changes(international_only=False, airline_code=None)
-    find_changes(international_only=False, airline_code=airline_code)
-    find_changes(international_only=True, airline_code=None)
-    find_changes(international_only=True, airline_code=airline_code)
+    find_changes(minimum_threshold=100, international_only=False, airline_code=None)
+    find_changes(minimum_threshold=100, international_only=False, airline_code=airline_code)
+    find_changes(minimum_threshold=100, international_only=True, airline_code=None)
+    find_changes(minimum_threshold=100, international_only=True, airline_code=airline_code)
