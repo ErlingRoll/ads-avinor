@@ -85,7 +85,8 @@ def show_scores(international_only=False, airline_code=None, amount_shown=None):
 
     flat_changes = open(f'../../output/scores/scores{file_filters}.csv', 'r')
     data_flat = flat_changes.readlines()
-    data_flat.pop(0)
+    headers_meta = data_flat.pop(0)
+    meta = headers_meta.split(',')[-1].split('=')[1].split(' ')
     amount_routes = len(data_flat)
 
     if amount_shown:
@@ -106,9 +107,6 @@ def show_scores(international_only=False, airline_code=None, amount_shown=None):
             x_labels.append(data[0])
 
     average = total / amount_shown
-    x = np.linspace(-1, 1, amount_shown)
-    y = [average]*amount_shown
-    # plt.plot(x, y)
 
     fig, ax = plt.subplots()
     index = np.arange(amount_shown)
@@ -119,7 +117,7 @@ def show_scores(international_only=False, airline_code=None, amount_shown=None):
     plt.ylabel('Compound score')
     plt.xlabel('Route')
     plt.title(f'scores{file_filters}.csv')
-    plt.suptitle(f'Average difference: {average}')
+    plt.suptitle(f'Weights: total_people={meta[0]}, percent={meta[1]}, flat={meta[2]},')
     plt.xticks(index, x_labels, rotation='vertical')
     plt.legend()
     plt.tight_layout()
