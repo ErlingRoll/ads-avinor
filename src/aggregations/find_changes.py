@@ -151,7 +151,7 @@ def find_changes(international_only=False, airline_code=None, minimum_threshold=
     min_score = None
     for k, v in routes_two_ways.items():
         # print(f'{k}:', v['people_summer_norm'], v['change_percent_norm'], v['change_people_flat_norm'])
-        score = int(round((v['people_summer_norm'] * people_weight) + (v['change_percent_norm'] * percent_weight) + (v['change_people_flat_norm'] * flat_weight)))
+        score = round((v['people_summer_norm'] * people_weight) + (v['change_percent_norm'] * percent_weight) + (v['change_people_flat_norm'] * flat_weight),4)
         routes_two_ways[k]['score'] = score
         if not max_score or not min_score:
             max_score = score

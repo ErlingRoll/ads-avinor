@@ -1,4 +1,4 @@
-route,total_people_summer,change_percent,change_people_flat,score,score_normalized,meta=0.5 50.2 0.3
-ALC-OSL,1435,4.90489,944,5059,100.0
-CPH-OSL,2734,3.39149,2004,3073,60.68
-ARN-OSL,668,1.17892,164,8,0.0
+route,total_people_summer,change_percent,change_people_flat,score,score_normalized,meta=1 0.0001 0
+CPH-OSL,2734,3.39149,2004,100.0059,100.0
+ALC-OSL,1435,4.90489,944,37.13,37.13
+ARN-OSL,668,1.17892,164,0.0,0.0
