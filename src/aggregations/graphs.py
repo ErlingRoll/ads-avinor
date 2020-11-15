@@ -20,13 +20,15 @@ def show_graph(percent=True, sort_by_change=False, international_only=False, air
     else:
         file_filters += '_domestic_only'
 
-    flat_changes = open(f'../../output/changes/change{file_filters}.csv', 'r')
-    data_flat = flat_changes.readlines()
-    data_flat.pop(0)
-    amount_routes = len(data_flat)
+    changes = open(f'../../output/changes/change{file_filters}.csv', 'r')
+    changes_data = changes.readlines()
+    changes_data.pop(0)
+    changes_data.pop(0)
+    changes_data.pop(0)
+    amount_routes = len(changes_data)
 
     if reverse:
-        data_flat.reverse()
+        changes_data.reverse()
 
     if amount_shown:
         if amount_shown > amount_routes:
@@ -39,12 +41,12 @@ def show_graph(percent=True, sort_by_change=False, international_only=False, air
     bar2 = []
     x_labels = []
 
-    for line in data_flat[:amount_shown]:
+    for line in changes_data[:amount_shown]:
         if line:
             data = line.split(',')
             if percent:
-                bar1.append(round(100 * float(data[1]), 2))
-                total += round(100 * float(data[1]), 2)
+                bar1.append(round(float(data[1]), 2))
+                total += round(float(data[1]), 2)
             else:
                 bar1.append(float(data[1]))
                 bar2.append(float(data[2]))
@@ -61,11 +63,12 @@ def show_graph(percent=True, sort_by_change=False, international_only=False, air
 
     bar_width = 0.3
     opacity = 1
-    plt.bar(index, bar1, bar_width, alpha=opacity, color='#F85E00', label='Summer')
     if not percent:
+        plt.bar(index, bar1, bar_width, alpha=opacity, color='#F85E00', label='Summer')
         plt.bar(index + bar_width, bar2, bar_width, alpha=opacity, color='#5F4BB6', label='Autumn')
         plt.ylabel('Amount baggage')
     else:
+        plt.bar(index, bar1, bar_width, alpha=opacity, color='#F85E00', label='Change')
         plt.ylabel('Change in %')
     plt.xlabel('Route')
     plt.title(f'change{file_filters}.csv')
@@ -129,5 +132,5 @@ def show_scores(international_only=False, airline_code=None, amount_shown=None):
 if __name__ == '__main__':
 
     airline_code = 'DY'
-    # show_graph(percent=True, sort_by_change=False, international_only=False, airline_code=None, amount_shown=50, reverse=False)
-    show_scores(international_only=False, airline_code=None, amount_shown=50)
+    show_graph(percent=True, sort_by_change=False, international_only=False, airline_code=None, amount_shown=10, reverse=False)
+    # show_scores(international_only=False, airline_code=None, amount_shown=50)
