@@ -70,7 +70,9 @@ def find_changes(international_only=False, airline_code=None, minimum_threshold=
     with open(f'../../output/changes/change_percent{file_filters}.csv', 'w') as file:
         file.write('route,change_percent\n')
         for k, v in routes_sorted.items():
-            change_percent = v['people_summer'] / v['people_autumn']
+            people_summer = v['people_summer']
+            people_autumn = v['people_autumn']
+            change_percent = 100 * ((people_summer - people_autumn) / people_autumn)
             routes_sorted[k]['change_percent'] = change_percent
             file.write(f'{k},{change_percent}\n')
 
