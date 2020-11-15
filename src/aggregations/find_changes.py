@@ -144,7 +144,7 @@ def find_changes(international_only=False, airline_code=None, minimum_threshold=
     for k, v in routes_two_ways.items():
         routes_two_ways[k]['people_summer_norm'] = round(100 * (v['people_summer'] - people_summer['min']) / (people_summer['max'] - people_summer['min']), 2)
         routes_two_ways[k]['change_percent_norm'] = round(100 * (v['change_percent'] - change_percent['min']) / (change_percent['max'] - change_percent['min']), 2)
-        routes_two_ways[k]['change_people_flat_norm'] = round(100 * (v['people_summer'] - change_people_flat['min']) / (change_people_flat['max'] - change_people_flat['min']), 2)
+        routes_two_ways[k]['change_people_flat_norm'] = round(100 * (v['change_people_flat'] - change_people_flat['min']) / (change_people_flat['max'] - change_people_flat['min']), 2)
 
     # Calculate compound score
     max_score = None
@@ -184,9 +184,9 @@ def find_changes(international_only=False, airline_code=None, minimum_threshold=
 
 if __name__ == '__main__':
     airline_code = 'DY'
-    people_weight = 0.5
-    percent_weight = 0.2
-    flat_weight = 0.3
+    people_weight = 0
+    percent_weight = 0.0001
+    flat_weight = 1
     find_changes(minimum_threshold=100, international_only=False, airline_code=None, people_weight=people_weight, percent_weight=percent_weight, flat_weight=flat_weight)
     find_changes(minimum_threshold=100, international_only=False, airline_code=airline_code, people_weight=people_weight, percent_weight=percent_weight, flat_weight=flat_weight)
     find_changes(minimum_threshold=100, international_only=True, airline_code=None, people_weight=people_weight, percent_weight=percent_weight, flat_weight=flat_weight)
