@@ -154,7 +154,7 @@ def find_changes(international_only=False, airline_code=None, minimum_threshold=
     for k, v in routes_two_ways.items():
         routes_two_ways[k]['people_summer_norm'] = round(100 * (v['people_summer'] - people_summer['min']) / (people_summer['max'] - people_summer['min']), 2)
         routes_two_ways[k]['change_percent_norm'] = round(100 * (v['change_percent'] - change_percent['min']) / (change_percent['max'] - change_percent['min']), 2)
-        routes_two_ways[k]['change_people_flat_norm'] = round(100 * (v['people_summer'] - change_people_flat['min']) / (change_people_flat['max'] - change_people_flat['min']), 2)
+        routes_two_ways[k]['change_people_flat_norm'] = round(100 * (v['change_people_flat'] - change_people_flat['min']) / (change_people_flat['max'] - change_people_flat['min']), 2)
         amount_bags += routes_two_ways[k]['total_bags']
 
     # Calculate compound score
@@ -181,8 +181,9 @@ def find_changes(international_only=False, airline_code=None, minimum_threshold=
             'people_weight': people_weight,
             'percent_weight': percent_weight,
             'flat_weight': flat_weight,
-            'amount_bags': amount_bags,
-            'amount_deleted': amount_deleted_by_filter
+            'amount_bags': int(amount_bags),
+            'amount_deleted': int(amount_deleted_by_filter),
+            'percent_deleted': amount_deleted_by_filter / (amount_bags + amount_deleted_by_filter)
         }
         file.write(f'route,total_people_summer,change_percent,change_people_flat,score,score_normalized,meta={json.dumps(meta)}\n')
         for k, v in routes_sorted.items():
