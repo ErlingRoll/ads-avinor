@@ -1,3 +1,5 @@
+import json
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -86,7 +88,7 @@ def show_scores(international_only=False, airline_code=None, amount_shown=None):
     flat_changes = open(f'../../output/scores/scores{file_filters}.csv', 'r')
     data_flat = flat_changes.readlines()
     headers_meta = data_flat.pop(0)
-    meta = headers_meta.split(',')[-1].split('=')[1].split(' ')
+    meta = json.loads(headers_meta.split('meta=')[1])
     amount_routes = len(data_flat)
 
     if amount_shown:
@@ -117,7 +119,7 @@ def show_scores(international_only=False, airline_code=None, amount_shown=None):
     plt.ylabel('Compound score')
     plt.xlabel('Route')
     plt.title(f'scores{file_filters}.csv')
-    plt.suptitle(f'Weights: total_people={meta[0]}, percent={meta[1]}, flat={meta[2]},')
+    plt.suptitle(f'Weights: total_people={meta["people_weight"]}, percent={meta["percent_weight"]}, flat={meta["flat_weight"]},')
     plt.xticks(index, x_labels, rotation='vertical')
     plt.legend()
     plt.tight_layout()

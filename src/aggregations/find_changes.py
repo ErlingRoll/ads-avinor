@@ -1,3 +1,6 @@
+import json
+
+
 def find_changes(international_only=False, airline_code=None, minimum_threshold=None, threshold_both_ways=False, people_weight=1.0, percent_weight=1.0, flat_weight=1.0):
     file_filters = ''
     if airline_code:
@@ -16,6 +19,8 @@ def find_changes(international_only=False, airline_code=None, minimum_threshold=
     data_autumn.pop(0)
 
     routes = {}
+    amount_deleted_by_filter = 0
+    amount_bags = 0
 
     for line in data_summer:
         if line:
@@ -50,12 +55,14 @@ def find_changes(international_only=False, airline_code=None, minimum_threshold=
                     keys_to_delete.append(k)
 
     for k in keys_to_delete:
+        amount_deleted_by_filter += routes[k]['summer'] + routes[k]['autumn']
         del routes[k]
 
     # Estimate people
     for k, v in routes.items():
         routes[k]['people_summer'] = v['summer'] * 1.3
         routes[k]['people_autumn'] = v['autumn'] * 1.3
+        routes[k]['total_bags'] = v['summer'] + v['autumn']
 
     routes_sorted = dict(sorted(routes.items(), key=lambda x: x[1]['people_summer'] / x[1]['people_autumn'], reverse=True))
 
@@ -89,6 +96,7 @@ def find_changes(international_only=False, airline_code=None, minimum_threshold=
         alphabetical_key = '-'.join(sorted(k.split('-')))
         if not routes_two_ways.get(alphabetical_key):
             routes_two_ways[alphabetical_key] = {
+                'total_bags': v['total_bags'],
                 'people_summer': v['people_summer'],
                 'people_autumn': v['people_autumn'],
                 'change_percent': v['change_percent'],
@@ -97,6 +105,7 @@ def find_changes(international_only=False, airline_code=None, minimum_threshold=
             }
         else:
             routes_two_ways[alphabetical_key] = {
+                'total_bags': routes_two_ways[alphabetical_key]['total_bags'] + v['total_bags'],
                 'people_summer':  int(round((routes_two_ways[alphabetical_key]['people_summer'] + v['people_summer']) / 2)),
                 'people_autumn':  int(round((routes_two_ways[alphabetical_key]['people_autumn'] + v['people_autumn']) / 2)),
                 'change_percent': round((routes_two_ways[alphabetical_key]['change_percent'] + v['change_percent']) / 2, 5),
@@ -138,6 +147,7 @@ def find_changes(international_only=False, airline_code=None, minimum_threshold=
 
     # Remove routes that only goes one way
     for k in keys_to_delete:
+        amount_deleted_by_filter += routes_two_ways[k]['total_bags']
         del routes_two_ways[k]
 
     # Normalize attributes
@@ -145,6 +155,7 @@ def find_changes(international_only=False, airline_code=None, minimum_threshold=
         routes_two_ways[k]['people_summer_norm'] = round(100 * (v['people_summer'] - people_summer['min']) / (people_summer['max'] - people_summer['min']), 2)
         routes_two_ways[k]['change_percent_norm'] = round(100 * (v['change_percent'] - change_percent['min']) / (change_percent['max'] - change_percent['min']), 2)
         routes_two_ways[k]['change_people_flat_norm'] = round(100 * (v['change_people_flat'] - change_people_flat['min']) / (change_people_flat['max'] - change_people_flat['min']), 2)
+        amount_bags += routes_two_ways[k]['total_bags']
 
     # Calculate compound score
     max_score = None
@@ -166,27 +177,25 @@ def find_changes(international_only=False, airline_code=None, minimum_threshold=
 
     # Calculate normalized score
     with open(f'../../output/scores/scores{file_filters}.csv', 'w') as file:
-        file.write(f'route,total_people_summer,change_percent,change_people_flat,score,score_normalized,meta={people_weight} {percent_weight} {flat_weight}\n')
+        meta = {
+            'people_weight': people_weight,
+            'percent_weight': percent_weight,
+            'flat_weight': flat_weight,
+            'amount_bags': int(amount_bags),
+            'amount_deleted': int(amount_deleted_by_filter),
+            'percent_deleted': amount_deleted_by_filter / (amount_bags + amount_deleted_by_filter)
+        }
+        file.write(f'route,total_people_summer,change_percent,change_people_flat,score,score_normalized,meta={json.dumps(meta)}\n')
         for k, v in routes_sorted.items():
             score_normalized = round(100 * (v['score'] - min_score) / (max_score - min_score), 2)
             file.write(f'{k},{v["people_summer"]},{v["change_percent"]},{v["change_people_flat"]},{v["score"]},{score_normalized}\n')
 
-    # with open('../output/only_summer.csv', 'w') as file:
-    #     file.write('route,baggage_amount\n')
-    #     for k, v in routes_summer_only.items():
-    #         file.write(f'{k},{v}\n')
-    #
-    # with open('../output/only_autumn.csv', 'w') as file:
-    #     file.write('route,baggage_amount\n')
-    #     for k, v in routes_autumn_only.items():
-    #         file.write(f'{k},{v}\n')
-
 
 if __name__ == '__main__':
     airline_code = 'DY'
-    people_weight = 0
-    percent_weight = 0.0001
-    flat_weight = 1
+    people_weight = 0.5
+    percent_weight = 0.2
+    flat_weight = 0.3
     find_changes(minimum_threshold=100, international_only=False, airline_code=None, people_weight=people_weight, percent_weight=percent_weight, flat_weight=flat_weight)
     find_changes(minimum_threshold=100, international_only=False, airline_code=airline_code, people_weight=people_weight, percent_weight=percent_weight, flat_weight=flat_weight)
     find_changes(minimum_threshold=100, international_only=True, airline_code=None, people_weight=people_weight, percent_weight=percent_weight, flat_weight=flat_weight)

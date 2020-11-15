@@ -1,4 +1,4 @@
-route,total_people_summer,change_percent,change_people_flat,score,score_normalized,meta=0 0.0001 1
-CPH-OSL,2734,3.39149,2004,139.6759,100.0
-ALC-OSL,1435,4.90489,944,69.09,37.14
-ARN-OSL,668,1.17892,164,27.39,0.0
+route,total_people_summer,change_percent,change_people_flat,score,score_normalized,meta={"people_weight": 0, "percent_weight": 0.0001, "flat_weight": 1, "amount_bags": 10096, "amount_deleted": 47965, "percent_deleted": 0.8261139146759443}
+CPH-OSL,2734,3.39149,2004,100.0059,100.0
+ALC-OSL,1435,4.90489,944,42.4,42.4
+ARN-OSL,668,1.17892,164,0.0,0.0
