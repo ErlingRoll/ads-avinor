@@ -61,14 +61,14 @@ class BagModel:
                         or departure_airport != second_last_airport:
                     continue
 
-                if all([final_destination in norwegian_airports for i in [departure_airport, final_destination]]):
-                    # Must be domestic
-                    if international_only:
-                        continue
-                else:
-                    # Must be international
-                    if not international_only:
-                        continue
+                is_domestic = all([i in norwegian_airports for i in [departure_airport, final_destination]])
+
+                if is_domestic and international_only:
+                    continue
+
+                if not is_domestic and not international_only:
+                    continue
+
             except Exception as e:
                 print(bag_number, e)
 
@@ -80,6 +80,14 @@ class BagModel:
                 departure_airport = bag[f'Leg{str(leg_number)}_departureAirportIATA']
                 arrival_airport = bag[f'Leg{str(leg_number)}_arrivalAirportIATA']
                 _airline_code = bag[f'Leg{str(leg_number)}_operatingAirlineIATA']
+
+                is_domestic = all([i in norwegian_airports for i in [departure_airport, arrival_airport]])
+
+                if is_domestic and international_only:
+                    continue
+
+                if not is_domestic and not international_only:
+                    continue
 
                 # Skip if airline code does not match the one specified if it is specified
                 if airline_code:
