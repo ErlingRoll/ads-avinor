@@ -199,6 +199,6 @@ if __name__ == '__main__':
     percent_weight = 0.2
     flat_weight = 0.3
     find_changes(minimum_threshold=100, international_only=False, airline_code=None, people_weight=people_weight, percent_weight=percent_weight, flat_weight=flat_weight)
-    find_changes(minimum_threshold=100, international_only=False, airline_code=airline_code, people_weight=people_weight, percent_weight=percent_weight, flat_weight=flat_weight)
-    find_changes(minimum_threshold=100, international_only=True, airline_code=None, people_weight=people_weight, percent_weight=percent_weight, flat_weight=flat_weight)
-    find_changes(minimum_threshold=100, international_only=True, airline_code=airline_code, people_weight=people_weight, percent_weight=percent_weight, flat_weight=flat_weight)
+    # find_changes(minimum_threshold=100, international_only=False, airline_code=airline_code, people_weight=people_weight, percent_weight=percent_weight, flat_weight=flat_weight)
+    # find_changes(minimum_threshold=100, international_only=True, airline_code=None, people_weight=people_weight, percent_weight=percent_weight, flat_weight=flat_weight)
+    # find_changes(minimum_threshold=100, international_only=True, airline_code=airline_code, people_weight=people_weight, percent_weight=percent_weight, flat_weight=flat_weight)

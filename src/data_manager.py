@@ -14,7 +14,7 @@ class DataManager:
         self.airport_metadata_filename = airport_metadata_filename
         self.airport_metadata = self._read_file(self.data_folder + airport_metadata_filename)
 
-    def read_multiple_data_files(self, file_indexes: []):
+    def read_multiple_data_files(self, file_indexes=None):
         if file_indexes:
             self.bag_messages = self._read_file(self._create_data_file_path(str(file_indexes.pop(0))))
         else:

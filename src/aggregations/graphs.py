@@ -132,5 +132,5 @@ def show_scores(international_only=False, airline_code=None, amount_shown=None):
 if __name__ == '__main__':
 
     airline_code = 'DY'
-    # show_graph(percent=True, sort_by_change=False, international_only=False, airline_code=None, amount_shown=50, reverse=True)
-    show_scores(international_only=False, airline_code=None, amount_shown=50)
+    # show_graph(percent=True, sort_by_change=False, international_only=False, airline_code=None, amount_shown=20, reverse=True)
+    show_scores(international_only=False, airline_code=None, amount_shown=None)

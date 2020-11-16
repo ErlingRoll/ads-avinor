@@ -10,8 +10,8 @@ class BagModel:
     def get_routes(self, summer=True, international_only=False, airline_code=None):
 
         # Hard coded summer and autumn periods
-        summer_period = {'start_date': '2020-07-1', 'end_date': '2020-08-15'}
-        autumn_period = {'start_date': '2020-08-16', 'end_date': '2020-09-15'}
+        summer_period = {'start_date': '2020-07-01', 'end_date': '2020-08-10'}
+        autumn_period = {'start_date': '2020-08-12', 'end_date': '2020-09-21'}
 
         # Set period for valid routes
         if summer:
@@ -41,7 +41,7 @@ class BagModel:
 
             # For showing loading progress
             if index % loading_interval == 0:
-                print('Getting routes:', (index * 100 / len(bag_messages) + 1), end='%\r')
+                print('Getting routes:', (index * 100 / len(bag_messages)) + 1, end='%\r')
 
             airport_legs = int(row['LegArrayLength'])
 
